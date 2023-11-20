@@ -1,0 +1,47 @@
+:root {
+    --primary-color: #003F91;
+    --primary-color-transparent: rgba(0, 63, 145, 0.6);
+    --background-color: #f8f8f8;
+    --background-color-light: #fff;
+    --background-color-dark: #eee;
+    --background-color-darker: #888;
+    --text-light: #fff;
+    --text-dark: #333;
+}
+
+* {
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background-color: var(--background-color-dark);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    padding: 10px;
+}
+
+input,
+button {
+    padding: 5px;
+    background-color: var(--background-color-light);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: none;
+    border-radius: 5px;
+}
+
+button {
+    transition: color 50ms, background-color 50ms;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
