@@ -1,0 +1,6 @@
+
+to-do-list/firebase.json
+to-do-list/.firebaserc
+to-do-list/.firebase/hosting.YnVpbGQ.cache
+.github/workflows/firebase-hosting-pull-request.yml
+.github/workflows/firebase-hosting-merge.yml

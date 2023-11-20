@@ -42,7 +42,7 @@ These instructions will help you get a copy of the project up and running on you
 2. **Navigate to the project directory**:
 
     ```bash
-    cd your-repo
+    cd to-do-list
     ```
 
 3. **Install dependencies**:
