@@ -61,6 +61,10 @@ function TodoList(props) {
     const importTasks = (event) => {
         event.preventDefault();
         const file = event.target.files[0];
+        if (!file || file.type !== 'text/plain') {
+            window.alert('Please select a .txt file');
+            return;
+        }
         const reader = new FileReader();
         reader.readAsText(file);
         reader.onload = (event) => {
@@ -73,7 +77,17 @@ function TodoList(props) {
             setTasks(prevTasks => [...prevTasks, ...newTasks]);
 
         }
+    }
 
+    const exportTasks = (event) => {
+        event.preventDefault();
+        const tasksToExport = tasks.map(task => task.description).join('\r\n');
+        const blob = new Blob([tasksToExport], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${props.todoListName}.txt`;
+        link.href = url;
+        link.click();
     }
 
     const handleTaskChange = (event, taskIndex) => {
@@ -109,10 +123,13 @@ function TodoList(props) {
     return (
         <div id='to-do-list'>
             <h1>{props.todoListName}</h1>
-            <h2>Tasks</h2>
-            <h3>Completed {completedTasks()} out of {numberOfTasks()}<br />{percentageComplete()}% Complete</h3>
-            <label htmlFor="importTasks">Import tasks - (.txt file)</label>
-            <input type='file' id='importTasks' onChange={event => importTasks(event)} />
+            <h3>Completed {completedTasks()} out of {numberOfTasks()}<br />
+                {percentageComplete()}%</h3>
+            <div className='import-export'>
+                <label htmlFor="importTasks">Import tasks - (.txt file)</label>
+                <input type='file' id='importTasks' onChange={event => importTasks(event)} />
+                <button onClick={event => exportTasks(event)}>Export tasks</button>
+            </div>
             <form onSubmit={event => handleNewTaskCreation(event, newTask)} id='new-task-form'>
                 <label htmlFor="newTask">New to-do:</label>
                 <input type="text" id="newTask" value={newTask} onChange={event => setNewTask(event.target.value)} />

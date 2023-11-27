@@ -2,10 +2,18 @@
     color: var(--text-dark);
     max-width: 90%;
     background-color: var(--background-color);
-    padding: 0 40px;
+    padding: 2% 5%;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+.import-export,
+#new-task-form {
+    width: 100%;
 }
 
 h1 {
@@ -23,6 +31,11 @@ h2 {
     justify-content: flex-start;
     margin: 20px 0;
     align-items: center;
+}
+
+
+.import-export input {
+    margin: 10px;
 }
 
 .task,
@@ -57,7 +70,6 @@ h2 {
 
 #to-do-list ul li {
     margin: 10px 0;
-    justify-content: center;
 }
 
 #to-do-list input[type=checkbox] {
