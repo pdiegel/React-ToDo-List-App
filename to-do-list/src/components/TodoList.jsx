@@ -17,28 +17,36 @@ function TodoList(props) {
 
     }, [props.todoListName]);
 
-    const addNewTask = (event) => {
-        event.preventDefault();
-        if (newTask.trim() === '') {
+    useEffect(() => {
+        if (props.todoListName.trim() === '') {
             return;
         }
-        const updatedTasks = [...tasks, { description: newTask, completed: false }];
-        setTasks(updatedTasks);
+        window.localStorage.setItem(props.todoListName, JSON.stringify(tasks));
+    }, [props.todoListName, tasks]);
+
+    const addNewTask = (taskDescription) => {
+        console.log("Adding new task");
+        console.log("New task: " + taskDescription);
+        if (taskDescription.trim() === '') {
+            return;
+        }
+        console.log("Updating tasks..");
+        const newTask = { description: taskDescription, completed: false };
+        setTasks(prevTasks => [...prevTasks, newTask]);
+        console.log("Tasks updated");
+        console.log("Tasks saved to local storage");
         setNewTask('');
-        window.localStorage.setItem(props.todoListName, JSON.stringify(updatedTasks));
     }
 
     const toggleTaskCompleted = (taskIndex) => {
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex].completed = !updatedTasks[taskIndex].completed;
         setTasks(updatedTasks);
-        window.localStorage.setItem(props.todoListName, JSON.stringify(updatedTasks));
     }
 
     const deleteTask = (taskToDelete) => {
         const updatedTasks = tasks.filter(task => task !== taskToDelete);
         setTasks(updatedTasks);
-        window.localStorage.setItem(props.todoListName, JSON.stringify(updatedTasks));
     }
 
     const editTask = (taskIndex) => {
@@ -46,15 +54,38 @@ function TodoList(props) {
         if (editingIndex !== taskIndex) {
             setEditingIndex(taskIndex);
         } else {
-            window.localStorage.setItem(props.todoListName, JSON.stringify(tasks));
             setEditingIndex(-1);
         }
     }
 
+    const importTasks = (event) => {
+        event.preventDefault();
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = (event) => {
+            const importedTasks = event.target.result.split('\r\n');
+            const newTasks = importedTasks.filter(task => task.trim() !== '').map(task => ({
+                description: task,
+                completed: false
+            }));
+
+            setTasks(prevTasks => [...prevTasks, ...newTasks]);
+
+        }
+
+    }
+
     const handleTaskChange = (event, taskIndex) => {
+        event.preventDefault();
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex].description = event.target.value;
         setTasks(updatedTasks);
+    }
+
+    const handleNewTaskCreation = (event, taskDescription) => {
+        event.preventDefault();
+        addNewTask(taskDescription);
     }
 
     const numberOfTasks = () => {
@@ -80,9 +111,11 @@ function TodoList(props) {
             <h1>{props.todoListName}</h1>
             <h2>Tasks</h2>
             <h3>Completed {completedTasks()} out of {numberOfTasks()}<br />{percentageComplete()}% Complete</h3>
-            <form onSubmit={addNewTask} id='new-task-form'>
+            <label htmlFor="importTasks">Import tasks - (.txt file)</label>
+            <input type='file' id='importTasks' onChange={event => importTasks(event)} />
+            <form onSubmit={event => handleNewTaskCreation(event, newTask)} id='new-task-form'>
                 <label htmlFor="newTask">New to-do:</label>
-                <input type="text" id="newTask" value={newTask} onChange={(event) => setNewTask(event.target.value)} />
+                <input type="text" id="newTask" value={newTask} onChange={event => setNewTask(event.target.value)} />
                 <button type="submit">Add</button>
             </form>
             <ul>
